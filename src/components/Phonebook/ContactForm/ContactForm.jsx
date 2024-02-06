@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import styles from './contactForm.module.css';
 import { nanoid } from 'nanoid';
+
+import styles from './contactForm.module.css';
 
 const INITIAL_STATE = {
   name: '',
@@ -13,17 +14,13 @@ const ContactForm = ({ onSubmit }) => {
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setState({ ...state, [name]: value });
-    // setState(prev => ({
-    //   ...prev,
-    //   [name]: value,
-    // }));
+   
   };
 
   const handleSubmit = e => {
     e.preventDefault();
     onSubmit({ ...state });
-    // Коли відбувається handleSubmit нам треба витягти дані з форми
-    // const { elements } = e.currentTarget;
+  
     reset();
   };
   const reset = () => {

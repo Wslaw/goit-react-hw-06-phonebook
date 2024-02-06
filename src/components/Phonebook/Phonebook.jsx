@@ -1,29 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
-import { nanoid } from 'nanoid';
+import { useState } from 'react';
+// import { nanoid } from 'nanoid';
 import styles from './phonebook.module.css';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
-import WallImage from '../forest.jpg';
+import image from '../forest.jpg';
+import { useSelector } from 'react-redux';
 
 const Phonebook = () => {
-  const [contacts, setContacts] = useState(() => {
-    const data = JSON.parse(localStorage.getItem('my-contacts'));
-    return data || [];
-  });
+ 
+  const contacts = useSelector(store=>store.contacts)
+
   const [filter, setFilter] = useState('');
 
-  const firstRender = useRef(true);
+  console.log(setFilter)
 
-  useEffect(() => {
-    if (!firstRender.current) {
-      localStorage.setItem('my-contacts', JSON.stringify(contacts));
-    }
-  }, [contacts]);
-
-  useEffect(() => {
-    firstRender.current = false;
-  }, []);
+  /*
 
   const isDublicate = ({ name }) => {
     const normalizedName = name.toLowerCase();
@@ -80,21 +72,25 @@ const Phonebook = () => {
   };
 
   const items = getFlteredContacts();
-
+*/
   return (
     <div
       className={styles.body}
-      style={{ backgroundImage: `url(${WallImage})` }}
+      style={{ backgroundImage: `url(${image})` }}
     >
       <div className={styles.container}>
         <h1 className={styles.title}>Phonebook</h1>
-        <ContactForm onSubmit={addContact} />
+        <ContactForm
+          // onSubmit={addContact}
+        />
         <div>
           <h2 className={styles.title}>Contacts</h2>
           <p className={styles.text}>Find contacts by name</p>
-          <Filter onChange={changeFilter} value={filter } />
+          <Filter
+            // onChange={changeFilter}
+            value={filter} />
 
-          <ContactList items={items} deleteContact={deleteContact} />
+          <ContactList items={contacts} deleteContact={()=>{}} />
         </div>
       </div>
     </div>

@@ -13,7 +13,7 @@ import {
 import { getAllContacts } from '../../redux/contacts/contacts-selectors';
 import {getFilteredContacts} from '../../redux/contacts/contacts-selectors';
 // import { getFilter } from '../../redux/contacts/contacts-selectors';
-import { setFilter } from '../../redux/contacts/contacts-actions';
+import { setFilter } from '../../redux/filter/filter-actions';
 
 const Phonebook = () => {
  

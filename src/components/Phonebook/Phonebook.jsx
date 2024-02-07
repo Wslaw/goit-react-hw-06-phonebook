@@ -1,5 +1,4 @@
-// import { useState } from 'react';
-// import { nanoid } from 'nanoid';
+
 import styles from './phonebook.module.css';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
@@ -9,21 +8,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   addContacts,
   deleteContacts,
-} from '../../redux/contacts/contacts-actions';
+} from '../../redux/contacts/contacts-slice';
 import { getAllContacts } from '../../redux/contacts/contacts-selectors';
 import {getFilteredContacts} from '../../redux/contacts/contacts-selectors';
-// import { getFilter } from '../../redux/contacts/contacts-selectors';
-import { setFilter } from '../../redux/filter/filter-actions';
+import { setFilter } from '../../redux/filter/filter-slice';
 
 const Phonebook = () => {
  
   const contacts = useSelector(getAllContacts);
-  // const filter = useSelector(getFilter);
   const filteredContacts = useSelector(getFilteredContacts);
 
-  // const [filter, setFilter] = useState('');
 
-  // console.log(setFilter)
+  // console.log(setFilter);
 
 
   const dispatch = useDispatch();

@@ -1,4 +1,4 @@
-
+import React from 'react';
 import styles from './phonebook.module.css';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
@@ -10,94 +10,45 @@ import {
   deleteContacts,
 } from '../../redux/contacts/contacts-slice';
 import { getAllContacts } from '../../redux/contacts/contacts-selectors';
-import {getFilteredContacts} from '../../redux/contacts/contacts-selectors';
 import { setFilter } from '../../redux/filter/filter-slice';
 
 const Phonebook = () => {
- 
   const contacts = useSelector(getAllContacts);
-  const filteredContacts = useSelector(getFilteredContacts);
-
-
-  // console.log(setFilter);
-
-
   const dispatch = useDispatch();
 
-
-  const isDublicate = ({ name }) => {
+  const isDuplicate = ({ name }) => {
     const normalizedName = name.toLowerCase();
-
-    const dublicate = contacts.find(item => {
-      const normalizedCurrentName = item.name.toLowerCase();
-
-      return (
-        normalizedCurrentName === normalizedName
-      );
-    });
-    return Boolean(dublicate);
+    return contacts.some(
+      contact => contact.name.toLowerCase() === normalizedName
+    );
   };
-  const onAddContacts = data => {
 
-    if (isDublicate(data)) {
-      return alert(
-        `This contact ${data.name}: ${data.number} is already in the book`
-      );
+  const onAddContact = data => {
+    if (isDuplicate(data)) {
+      alert(`This contact ${data.name}: ${data.number} is already in the book`);
+      return;
     }
-    const action = addContacts(data);
-    // console.log(action);
-    dispatch(action);
-    
+    dispatch(addContacts(data));
   };
 
-  const onDeleteContacts = id => {
-    // setContacts(prevContacts => prevContacts.filter(item => item.id !== id));
-    const action = deleteContacts(id);
-    dispatch(action);
+  const onDeleteContact = id => {
+    dispatch(deleteContacts(id));
   };
-  const changeFilter = ({ target }) => {
-    // setFilter(target.value);
+
+  const onChangeFilter = ({ target }) => {
     dispatch(setFilter(target.value));
-
   };
-  // console.log(filter)
-  // *********************************************************************
-  // const getFlteredContacts = () => {
-  //   if (!filter) {
-  //     return contacts;
-  //   }
-  //   const normalizedFilter = filter.toLocaleLowerCase();
 
-  //   const filteredContacts = contacts.filter(({ name, number }) => {
-  //     const normalizedName = name.toLocaleLowerCase();
-
-  //     return (
-  //       normalizedName.includes(normalizedFilter)
-  //     );
-  //   });
-
-  //   return filteredContacts;
-  // };
-
-  // const items = getFlteredContacts();
-// ********************************************************************
   return (
     <div className={styles.body} style={{ backgroundImage: `url(${image})` }}>
       <div className={styles.container}>
         <h1 className={styles.title}>Phonebook</h1>
-        <ContactForm onSubmit={onAddContacts} />
+        <ContactForm onSubmit={onAddContact} />
         <div>
           <h2 className={styles.title}>Contacts</h2>
           <p className={styles.text}>Find contacts by name</p>
-          <Filter
-            onChange={changeFilter}
-            // value={filter}
-          />
-
-          <ContactList
-            items={filteredContacts}
-            deleteContact={onDeleteContacts}
-          />
+          <Filter onChange={onChangeFilter} value={''} />
+          <ContactList items={contacts} deleteContact={onDeleteContact} />
         </div>
       </div>
     </div>

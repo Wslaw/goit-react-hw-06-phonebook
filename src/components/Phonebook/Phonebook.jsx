@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './phonebook.module.css';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
@@ -10,32 +9,42 @@ import {
   deleteContacts,
 } from '../../redux/contacts/contacts-slice';
 import { getAllContacts } from '../../redux/contacts/contacts-selectors';
+import { getFilteredContacts } from '../../redux/contacts/contacts-selectors';
 import { setFilter } from '../../redux/filter/filter-slice';
+import { getFilter } from '../../redux/filter/filter-selectors'; 
 
 const Phonebook = () => {
   const contacts = useSelector(getAllContacts);
+  const filteredContacts = useSelector(getFilteredContacts);
+  const filter = useSelector(getFilter); 
+
   const dispatch = useDispatch();
 
-  const isDuplicate = ({ name }) => {
+  const isDublicate = ({ name }) => {
     const normalizedName = name.toLowerCase();
-    return contacts.some(
-      contact => contact.name.toLowerCase() === normalizedName
-    );
-  };
 
-  const onAddContact = data => {
-    if (isDuplicate(data)) {
-      alert(`This contact ${data.name}: ${data.number} is already in the book`);
-      return;
+    const dublicate = contacts.find(item => {
+      const normalizedCurrentName = item.name.toLowerCase();
+
+      return normalizedCurrentName === normalizedName;
+    });
+    return Boolean(dublicate);
+  };
+  const onAddContacts = data => {
+    if (isDublicate(data)) {
+      return alert(
+        `This contact ${data.name}: ${data.number} is already in the book`
+      );
     }
-    dispatch(addContacts(data));
+    const action = addContacts(data);
+    dispatch(action);
   };
 
-  const onDeleteContact = id => {
-    dispatch(deleteContacts(id));
+  const onDeleteContacts = id => {
+    const action = deleteContacts(id);
+    dispatch(action);
   };
-
-  const onChangeFilter = ({ target }) => {
+  const changeFilter = ({ target }) => {
     dispatch(setFilter(target.value));
   };
 
@@ -43,12 +52,19 @@ const Phonebook = () => {
     <div className={styles.body} style={{ backgroundImage: `url(${image})` }}>
       <div className={styles.container}>
         <h1 className={styles.title}>Phonebook</h1>
-        <ContactForm onSubmit={onAddContact} />
+        <ContactForm onSubmit={onAddContacts} />
         <div>
           <h2 className={styles.title}>Contacts</h2>
           <p className={styles.text}>Find contacts by name</p>
-          <Filter onChange={onChangeFilter} value={''} />
-          <ContactList items={contacts} deleteContact={onDeleteContact} />
+          <Filter
+            onChange={changeFilter}
+            value={filter}
+          />
+
+          <ContactList
+            items={filteredContacts}
+            deleteContact={onDeleteContacts}
+          />
         </div>
       </div>
     </div>

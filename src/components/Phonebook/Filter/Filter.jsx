@@ -1,14 +1,25 @@
+import { useDispatch } from 'react-redux';
 import styles from '../Filter/filter-module.css';
+import { setFilter } from '../../../redux/filter/filter-slice';
+
+const Filter = () => {
+  
+  const dispatch = useDispatch();
+  
+  const changeFilter = ({ target }) => {
+    dispatch(setFilter(target.value));
+  };
 
 
-const Filter = ({ onChange, value })=> {
-    return (<input className={styles.input}
-  onChange={onChange}
-  name="filter"
-  placeholder="Search"
-    type="text"
-    value={value}
-/>)
+    return (
+      <input
+        className={styles.input}
+        onChange={changeFilter}
+        name="filter"
+        placeholder="Search"
+        type="text"
+      />
+    );
 }
 
 export default Filter;

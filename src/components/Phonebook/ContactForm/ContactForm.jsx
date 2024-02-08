@@ -1,47 +1,53 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { nanoid } from 'nanoid';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getFilteredContacts } from '../../../redux/contacts/contacts-selectors';
+import { addContacts } from '../../../redux/contacts/contacts-slice';
 import styles from './contactForm.module.css';
 
-const INITIAL_STATE = {
-  name: '',
-  number: '',
-};
 
-const ContactForm = ({ onSubmit }) => {
-  const [state, setState] = useState({ ...INITIAL_STATE });
+const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getFilteredContacts);
 
-  const handleChange = ({ target }) => {
-    const { name, value } = target;
-    setState({ ...state, [name]: value });
-   
-  };
 
   const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit({ ...state });  
-    reset();
+    e.preventDefault();   
+    
+    const nameInput = e.target.elements.name;
+    const numberInput = e.target.elements.number;
+
+    const normalizedName = nameInput.value.toLowerCase();
+    const isDuplicate = contacts.some(
+      contact => contact.name.toLowerCase() === normalizedName
+    );
+      if (isDuplicate) {
+        alert(`${nameInput.value} is already in the phone book.`);
+        e.target.reset();
+      } else {
+        dispatch(
+          addContacts({
+            id: nanoid(),
+            name: nameInput.value,
+            number: numberInput.value,
+          })
+        );
+        e.target.reset();
+      }
+    
   };
-  const reset = () => {
-    setState({ ...INITIAL_STATE });
-  };
+ 
 
-  const nameId = nanoid();
-  const numberId = nanoid();
-
-  const { name, number } = state;
-
+  
   return (
     <div>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.wrapper}>
-          <label htmlFor={nameId} className={styles.formLabel}>
+          <label htmlFor='name' className={styles.formLabel}>
             Name
           </label>
           <input
-            value={name}
-            onChange={handleChange}
-            id={nameId}
+            id='name'
             className={styles.input}
             type="text"
             name="name"
@@ -50,13 +56,11 @@ const ContactForm = ({ onSubmit }) => {
             required
             placeholder="Enter your Name."
           />
-          <label htmlFor={numberId} className={styles.formLabel}>
+          <label htmlFor='number' className={styles.formLabel}>
             Number
           </label>
           <input
-            value={number}
-            onChange={handleChange}
-            id={numberId}
+            id='number'
             className={styles.input}
             type="tel"
             name="number"

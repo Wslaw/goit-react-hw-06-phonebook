@@ -3,6 +3,9 @@ import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFilteredContacts } from '../../../redux/contacts/contacts-selectors';
 import { addContacts } from '../../../redux/contacts/contacts-slice';
+import Notiflix from 'notiflix';
+
+
 import styles from './contactForm.module.css';
 
 
@@ -19,10 +22,14 @@ const ContactForm = () => {
 
     const normalizedName = nameInput.value.toLowerCase();
     const isDuplicate = contacts.some(
-      contact => contact.name.toLowerCase() === normalizedName
+      contact => contact.name.toLowerCase() !== normalizedName
     );
       if (isDuplicate) {
-        alert(`${nameInput.value} is already in the phone book.`);
+        // alert(`${nameInput.value} is already in the phone book.`);
+        Notiflix.Notify.failure(
+          `${nameInput.value} is already in the phone book.`
+        );
+
         e.target.reset();
       } else {
         dispatch(

@@ -22,7 +22,7 @@ const ContactForm = () => {
 
     const normalizedName = nameInput.value.toLowerCase();
     const isDuplicate = contacts.some(
-      contact => contact.name.toLowerCase() !== normalizedName
+      contact => contact.name.toLowerCase() === normalizedName
     );
       if (isDuplicate) {
         // alert(`${nameInput.value} is already in the phone book.`);
